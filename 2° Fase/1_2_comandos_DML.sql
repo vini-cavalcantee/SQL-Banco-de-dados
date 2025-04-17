@@ -120,10 +120,11 @@ INSERT INTO MC_CLIENTE
 VALUES
     ('Julia Oliveira', NULL, NULL, 'A', 'juliaoliveira12@email.com', '
      11918273645', 'Oliveira123', 'Juli0aa');
--- Relatório de erros -
---ORA-00001: restrição exclusiva (RM563479.UK_MC_CLIENTE_MM_LOGIN) violada
--- Não é possível realizar esse insert, pois ele vai contra a CONSTRAINT 
---UNIQUE da coluna MN_LOGIN, gerando um erro e impedindo do código ser executado.
+/* Relatório de erros 
+ORA-00001: restrição exclusiva (RM563479.UK_MC_CLIENTE_MM_LOGIN) violada
+-Não é possível realizar esse insert. A tabela MC_CLIENTE possui uma 
+ constraint UNIQUE na coluna NM_LOGIN, que impede a duplicidade de logins.
+-Isso garante que cada cliente tenha um login exclusivo para autenticação no sistema.*/
 
 -- ALTERAR DADOS
 -- C) Selecione um funcionário e atualize o Cargo e aplique 12% de aumento de salário
@@ -143,20 +144,25 @@ WHERE NR_CLIENTE = 4;
 --   Justifique o motivo.
 DELETE FROM MC_ESTADO
 WHERE SG_ESTADO = 'SP';
---Relatório de erros -
---ORA-02292: restrição de integridade (RM563479.FK_MC_CIDADE_ESTADO) violada
--- Não foi possível excluir o estado com sigla 'SP' porque ele possui cidades 
---cadastradas que estão vinculadas a ele por meio de uma restrição de 
---integridade referencial.
+/*Relatório de erros -
+  ORA-02292: restrição de integridade (RM563479.FK_MC_CIDADE_ESTADO) violada
+- Não foi possível excluir o estado com sigla 'SP' porque a tabela MC_CIDADE 
+  possui uma chave estrangeira (FK) que referencia MC_ESTADO.
+- Essa restrição impede a exclusão de um estado se houver cidades associadas a ele, 
+  evitando dados inconsistentes (ex: cidades sem estado) e preservando a 
+  integridade referencial.*/
 
 -- F)Selecione um produto e tente atualizar o status do produto com o Status X.
 --   Isso foi possível? Justifique o motivo
 UPDATE MC_PRODUTO
 SET ST_PRODUTO = 'X'
 WHERE CD_PRODUTO = 1;
---Relatório de erros -
---ORA-02290: restrição de verificação (RM563479.MC_PRODUTO_CK_ST_PROD) violada
---Não foi possível realizar a ação pois ela viola uma constraint check.
+/*Relatório de erros -
+  ORA-02290: restrição de verificação (RM563479.MC_PRODUTO_CK_ST_PROD) violada
+- Não foi possível realizar a ação, pois a tabela MC_PRODUTO 
+  possui uma CONSTRAINT CHECK (MC_PRODUTO_CK_ST_PROD) que limita
+  os valores permitidos para a coluna ST_PRODUTO ('A' para Ativo, 'I' para Inativo).
+- O valor 'X' não se encontra nessa lista, logo não pode ser inserido.*/
 
 -- G) Confirme todas as transações pendentes
 COMMIT
